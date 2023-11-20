@@ -67,9 +67,57 @@ export default function HomePage() {
     }
   }
 
+  const deposit10 = async() => {
+    if (atm) {
+      let tx = await atm.deposit(10);
+      await tx.wait()
+      getBalance();
+    }
+  }
+
+  const deposit100 = async() => {
+    if (atm) {
+      let tx = await atm.deposit(100);
+      await tx.wait()
+      getBalance();
+    }
+  }
+
+  const deposit1000 = async() => {
+    if (atm) {
+      let tx = await atm.deposit(1000);
+      await tx.wait()
+      getBalance();
+    }
+  }
+
   const withdraw = async() => {
     if (atm) {
       let tx = await atm.withdraw(1);
+      await tx.wait()
+      getBalance();
+    }
+  }
+
+  const withdraw10 = async() => {
+    if (atm) {
+      let tx = await atm.withdraw(10);
+      await tx.wait()
+      getBalance();
+    }
+  }
+
+  const withdraw100 = async() => {
+    if (atm) {
+      let tx = await atm.withdraw(100);
+      await tx.wait()
+      getBalance();
+    }
+  }
+
+  const withdraw1000 = async() => {
+    if (atm) {
+      let tx = await atm.withdraw(1000);
       await tx.wait()
       getBalance();
     }
@@ -95,7 +143,13 @@ export default function HomePage() {
         <p>Your Account: {account}</p>
         <p>Your Balance: {balance}</p>
         <button onClick={deposit}>Deposit 1 ETH</button>
+        <button onClick={deposit10}>Deposit 10 ETH</button>
+        <button onClick={deposit100}>Deposit 100 ETH</button>
+        <button onClick={deposit1000}>Deposit 1000 ETH</button><br/>
         <button onClick={withdraw}>Withdraw 1 ETH</button>
+        <button onClick={withdraw10}>Withdraw 10 ETH</button>
+        <button onClick={withdraw100}>Withdraw 100 ETH</button>
+        <button onClick={withdraw1000}>Withdraw 1000 ETH</button>
       </div>
     )
   }
