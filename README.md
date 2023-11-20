@@ -1,5 +1,10 @@
 # Starter Next/Hardhat Project
 
+# This project features 3 functions namely getBalance, deposit, and withdraw.
+getBalance - returns the balance of the wallet
+deposit - allows the user to deposit from the wallet by 1, 10, 100, or 1000 ETH
+withdraw - allows the user to withdraw from the wallet by 1, 10, 100, or 1000 ETH
+
 After cloning the github, you will want to do the following to get the code running on your computer.
 
 1. Inside the project directory, in the terminal type: npm i
