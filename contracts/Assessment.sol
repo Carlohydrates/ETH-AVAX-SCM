@@ -9,6 +9,7 @@ contract Assessment {
 
     event Deposit(uint256 amount);
     event Withdraw(uint256 amount);
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
 
     constructor(uint initBalance) payable {
         owner = payable(msg.sender);
@@ -56,5 +57,22 @@ contract Assessment {
 
         // emit the event
         emit Withdraw(_withdrawAmount);
+    }
+
+    function transferOwnership(address payable _newOwner) public {
+        // make sure this is the owner
+        require(msg.sender == owner, "You are not the owner of this account");
+
+        // validate the new owner address
+        require(_newOwner != address(0), "Invalid new owner address");
+
+        // store the previous owner
+        address payable _previousOwner = owner;
+
+        // update the owner
+        owner = _newOwner;
+
+        // emit the event
+        emit OwnershipTransferred(_previousOwner, _newOwner);
     }
 }
