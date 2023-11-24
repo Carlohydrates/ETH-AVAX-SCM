@@ -1,9 +1,10 @@
 # Starter Next/Hardhat Project
 
-##  This project features 3 functions namely getBalance, deposit, and withdraw.
-## getBalance - returns the balance of the wallet
-## deposit - allows the user to deposit from the wallet by 1, 10, 100, or 1000 ETH
-## withdraw - allows the user to withdraw from the wallet by 1, 10, 100, or 1000 ETH
+##  This project features 4 functions namely getBalance, deposit, withdraw, and transferOwnership.
+# getBalance - returns the balance of the wallet
+# deposit - allows the user to deposit from the wallet by 1, 10, 100, or 1000 ETH
+# withdraw - allows the user to withdraw from the wallet by 1, 10, 100, or 1000 ETH
+# transferOwnership - transfers ownership of the account
 
 After cloning the github, you will want to do the following to get the code running on your computer.
 
