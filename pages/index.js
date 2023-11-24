@@ -4,9 +4,11 @@ import atm_abi from "../artifacts/contracts/Assessment.sol/Assessment.json";
 
 export default function HomePage() {
   const [ethWallet, setEthWallet] = useState(undefined);
+  const [walletBalance, setWalletBalance] = useState(undefined);
   const [account, setAccount] = useState(undefined);
   const [atm, setATM] = useState(undefined);
   const [balance, setBalance] = useState(undefined);
+  const [ownerError, setOwnerError] = useState(false);
 
   const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
   const atmABI = atm_abi.abi;
@@ -17,17 +19,16 @@ export default function HomePage() {
     }
 
     if (ethWallet) {
-      const account = await ethWallet.request({method: "eth_accounts"});
-      handleAccount(account);
+      const accounts = await ethWallet.request({method: "eth_accounts"});
+      handleAccount(accounts);
     }
   }
 
-  const handleAccount = (account) => {
-    if (account) {
-      console.log ("Account connected: ", account);
-      setAccount(account);
-    }
-    else {
+  const handleAccount = (accounts) => {
+    if (accounts && accounts.length > 0) {
+      console.log("Account connected: ", accounts[0]);
+      setAccount(accounts[0]);
+    } else {
       console.log("No account found");
     }
   }
@@ -53,9 +54,17 @@ export default function HomePage() {
     setATM(atmContract);
   }
 
-  const getBalance = async() => {
+  const getBalance = async () => {
     if (atm) {
-      setBalance((await atm.getBalance()).toNumber());
+      const atmBalance = (await atm.getBalance()).toNumber();
+      setBalance(atmBalance);
+
+      if (account) {
+        const provider = new ethers.providers.Web3Provider(ethWallet);
+        const wallet = provider.getSigner(account);
+        const walletBalance = ethers.utils.formatEther(await wallet.getBalance());
+        setWalletBalance(walletBalance);
+      }
     }
   }
 
@@ -123,6 +132,22 @@ export default function HomePage() {
     }
   }
 
+  const transferOwnership = async (newOwner) => {
+    if (atm && newOwner) {
+      try {
+        let tx = await atm.transferOwnership(newOwner);
+        await tx.wait();
+        alert(`Ownership transferred to ${newOwner}`);
+      } catch (error) {
+        console.error("Error transferring ownership:", error);
+        setOwnerError(true);
+        setTimeout(() => {
+          setOwnerError(false);
+        }, 5000);
+      }
+    }
+  };
+
   const initUser = () => {
     // Check to see if user has Metamask
     if (!ethWallet) {
@@ -145,11 +170,21 @@ export default function HomePage() {
         <button onClick={deposit}>Deposit 1 ETH</button>
         <button onClick={deposit10}>Deposit 10 ETH</button>
         <button onClick={deposit100}>Deposit 100 ETH</button>
-        <button onClick={deposit1000}>Deposit 1000 ETH</button><br/>
+        <button onClick={deposit1000}>Deposit 1000 ETH</button><br/><br/>
         <button onClick={withdraw}>Withdraw 1 ETH</button>
         <button onClick={withdraw10}>Withdraw 10 ETH</button>
         <button onClick={withdraw100}>Withdraw 100 ETH</button>
-        <button onClick={withdraw1000}>Withdraw 1000 ETH</button>
+        <button onClick={withdraw1000}>Withdraw 1000 ETH</button><br/><br/>
+
+        <button
+          onClick={() => {
+            const newOwner = prompt("Enter the new owner address:");
+            transferOwnership(newOwner);
+          }}
+        >
+          Change Owner
+        </button>
+        {ownerError && <p className="error">Error: Unable to change the Owner</p>}
       </div>
     )
   }
@@ -158,11 +193,16 @@ export default function HomePage() {
 
   return (
     <main className="container">
-      <header><h1>Welcome to the Metacrafters ATM!</h1></header>
+      <header><h1>Welcome to my ATM!</h1></header>
       {initUser()}
       <style jsx>{`
         .container {
-          text-align: center
+          text-align: center;
+          color: blue;
+          background-color: lightblue;
+          border-style: solid;
+          border-width: 8px;
+          padding: 100px;
         }
       `}
       </style>
